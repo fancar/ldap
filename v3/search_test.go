@@ -87,11 +87,6 @@ func TestEntry_Unmarshal(t *testing.T) {
 					Values:     []string{"mario@go-ldap.com"},
 					ByteValues: nil,
 				},
-				{
-					Name:       "upn",
-					Values:     []string{"mario@go-ldap.com.domain"},
-					ByteValues: nil,
-				},
 				// Tests int value.
 				{
 					Name:       "id",
@@ -137,7 +132,6 @@ func TestEntry_Unmarshal(t *testing.T) {
 			Dn       string    `ldap:"dn"`
 			Cn       string    `ldap:"cn"`
 			Mail     string    `ldap:"mail"`
-			UPN      *string   `ldap:"upn"`
 			ID       int       `ldap:"id"`
 			LongID   int64     `ldap:"longId"`
 			Data     []byte    `ldap:"data"`
@@ -163,12 +157,10 @@ func TestEntry_Unmarshal(t *testing.T) {
 			children = append(children, dn)
 		}
 
-		UPN := "mario@go-ldap.com.domain"
 		expect := &User{
 			Dn:       "cn=mario,ou=Users,dc=go-ldap,dc=github,dc=com",
 			Cn:       "mario",
 			Mail:     "mario@go-ldap.com",
-			UPN:      &UPN,
 			ID:       2147483647,
 			LongID:   9223372036854775807,
 			Data:     []byte("data"),

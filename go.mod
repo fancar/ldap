@@ -10,3 +10,5 @@ require (
 	github.com/stretchr/testify v1.8.0
 	golang.org/x/crypto v0.13.0 // indirect
 )
+
+replace github.com/Azure/go-ntlmssp => github.com/fancar/go-ntlmssp v0.0.0-20231215131707-2f5091060d17

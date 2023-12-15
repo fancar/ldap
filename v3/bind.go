@@ -10,8 +10,10 @@ import (
 	"math/rand"
 	"strings"
 
-	"github.com/Azure/go-ntlmssp"
 	ber "github.com/go-asn1-ber/asn1-ber"
+	// "gitlab.com/erth-tracking/go-ntlmssp"
+
+	"github.com/Azure/go-ntlmssp"
 )
 
 // SimpleBindRequest represents a username/password bind operation
@@ -389,7 +391,7 @@ func (l *Conn) ExternalBind() error {
 	return GetLDAPError(packet)
 }
 
-// NTLMBind performs an NTLMSSP bind leveraging https://github.com/Azure/go-ntlmssp
+// NTLMBind performs an NTLMSSP bind leveraging https://gitlab.com/erth-tracking/go-ntlmssp
 
 // NTLMBindRequest represents an NTLMSSP bind operation
 type NTLMBindRequest struct {
@@ -447,7 +449,7 @@ func (l *Conn) NTLMBind(domain, username, password string) error {
 
 // NTLMUnauthenticatedBind performs an bind with an empty password.
 //
-// A username is required. The anonymous bind is not (yet) supported by the go-ntlmssp library (https://github.com/Azure/go-ntlmssp/blob/819c794454d067543bc61d29f61fef4b3c3df62c/authenticate_message.go#L87)
+// A username is required. The anonymous bind is not (yet) supported by the go-ntlmssp library
 //
 // See https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-nlmp/b38c36ed-2804-4868-a9ff-8dd3182128e4 part 3.2.5.1.2
 func (l *Conn) NTLMUnauthenticatedBind(domain, username string) error {
@@ -519,7 +521,13 @@ func (l *Conn) NTLMChallengeBind(ntlmBindRequest *NTLMBindRequest) (*NTLMBindRes
 			responseMessage, err = ntlmssp.ProcessChallengeWithHash(ntlmsspChallenge, ntlmBindRequest.Username, ntlmBindRequest.Hash)
 		} else if ntlmBindRequest.Password != "" || ntlmBindRequest.AllowEmptyPassword {
 			_, _, domainNeeded := ntlmssp.GetDomain(ntlmBindRequest.Username)
-			responseMessage, err = ntlmssp.ProcessChallenge(ntlmsspChallenge, ntlmBindRequest.Username, ntlmBindRequest.Password, domainNeeded)
+			responseMessage, err = ntlmssp.ProcessChallengeWithDomain(
+				ntlmsspChallenge,
+				ntlmBindRequest.Domain,
+				ntlmBindRequest.Username,
+				ntlmBindRequest.Password,
+				domainNeeded,
+			)
 		} else {
 			err = fmt.Errorf("need a password or hash to generate reply")
 		}
