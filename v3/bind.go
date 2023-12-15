@@ -13,7 +13,8 @@ import (
 	ber "github.com/go-asn1-ber/asn1-ber"
 	// "gitlab.com/erth-tracking/go-ntlmssp"
 
-	"github.com/Azure/go-ntlmssp"
+	ntlmssp "github.com/Azure/go-ntlmssp"
+	// ntlmssp "github.com/fancar/go-ntlmssp"
 )
 
 // SimpleBindRequest represents a username/password bind operation
